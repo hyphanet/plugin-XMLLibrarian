@@ -150,7 +150,7 @@ public class XMLIndex extends Index implements ClientGetCallback, RequestClient{
 	 * @throws java.net.MalformedURLException
 	 */
 	private synchronized void startFetch() throws FetchException, MalformedURLException {
-		if (fetchStatus != FetchStatus.UNFETCHED)
+		if (fetchStatus != FetchStatus.UNFETCHED && fetchStatus != FetchStatus.FAILED)
 			return;
 		fetchStatus = FetchStatus.FETCHING;
 		String uri = indexuri + DEFAULT_FILE;
@@ -351,7 +351,7 @@ public class XMLIndex extends Index implements ClientGetCallback, RequestClient{
 		public synchronized void run(){
 			try{
 				while(waitingOnSubindex.size()>0){
-					if(fetchStatus==FetchStatus.UNFETCHED){
+					if(fetchStatus==FetchStatus.UNFETCHED || fetchStatus ==FetchStatus.FAILED ){
 						try {
 							fetchStatus = FetchStatus.FETCHING;
 							// TODO tidy the fetch stuff
