@@ -37,7 +37,6 @@ public class Search implements Request<URIWrapper> {
 	protected int stageCount;
 	private long blocksCompleted;
 	private long blocksTotal;
-	protected Exception err;
 
 	private static HashMap<String, Search> allsearches = new HashMap<String, Search>();
 
@@ -55,8 +54,14 @@ public class Search implements Request<URIWrapper> {
 			throw new InvalidSearchException("Blank search");
 
 		// See if the same search exists
-		if (hasSearch(search, indexuri))
-			return getSearch(search, indexuri);
+		if (hasSearch(search, indexuri)){
+			Search s = getSearch(search, indexuri);
+			if(s.getRequestStatus() == RequestStatus.ERROR){
+				allsearches.remove(makeString(search, indexuri));
+				return startSearch(search, indexuri);
+			}
+			return s;
+		}
 
 		Logger.minor(Search.class, "Starting new search for "+search+" in "+indexuri);
 
