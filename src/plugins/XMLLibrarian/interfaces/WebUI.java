@@ -12,11 +12,11 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import plugins.XMLLibrarian.Index;
+import plugins.XMLLibrarian.InvalidSearchException;
 import plugins.XMLLibrarian.Request;
 import plugins.XMLLibrarian.Search;
 import plugins.XMLLibrarian.URIWrapper;
@@ -431,16 +431,21 @@ public class WebUI{
 	}
 
 	/**
-	 * Put an error on the page, under node, also draws a big grey box around the error
+	 * Put an error on the page, under node, also draws a big grey box around
+	 * the error, unless it is an InvalidSearchException in which case it just shows the description
 	 */
 	public static void addError(HTMLNode node, Throwable error){
-		HTMLNode error1 = node.addChild("div", "style", "padding:10px;border:5px solid gray;margin:10px", error.toString());
-		for (StackTraceElement ste : error.getStackTrace()){
-			error1.addChild("br");
-			error1.addChild("#", " -- "+ste.toString());
+		if(error instanceof InvalidSearchException){	// Print description
+			node.addChild("p", error.getMessage());
+		}else{	// Else print stack trace
+			HTMLNode error1 = node.addChild("div", "style", "padding:10px;border:5px solid gray;margin:10px", error.toString());
+			for (StackTraceElement ste : error.getStackTrace()){
+				error1.addChild("br");
+				error1.addChild("#", " -- "+ste.toString());
+			}
+			if(error.getCause()!=null)
+				addError(error1, error.getCause());
 		}
-		if(error.getCause()!=null)
-			addError(error1, error.getCause());
 	}
 
 	/**
