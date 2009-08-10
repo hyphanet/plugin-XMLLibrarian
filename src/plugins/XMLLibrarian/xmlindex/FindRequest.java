@@ -204,8 +204,15 @@ public class FindRequest<E> implements Comparable<Request>, Request<E>{
 		}
 
 		String download = eventDescription.split(" ")[2];
-		long downloadProgress = Integer.parseInt(download.split("/")[0]);
-		long downloadSize = Integer.parseInt(download.split("/")[1]);
+		long downloadProgress;
+		long downloadSize;
+		try{
+			downloadProgress = Integer.parseInt(download.split("/")[0]);
+			downloadSize = Integer.parseInt(download.split("/")[1]);
+		}catch(NumberFormatException e){
+			downloadProgress = 0;
+			downloadSize = 0;
+		}
 		boolean finalized = eventDescription.contains("(finalized total)");
 		for (FindRequest request : requests)
 			request.updateWithEvent(downloadProgress, downloadSize, finalized);
