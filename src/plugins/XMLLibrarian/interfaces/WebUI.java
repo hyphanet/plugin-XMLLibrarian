@@ -272,7 +272,7 @@ public class WebUI{
 				}
 			}
 		}
-		resultsNode.addChild("p").addChild("span", "class", "librarian-summary-found", "Found"+results+"results");
+		resultsNode.addChild("p").addChild("span", "class", "librarian-summary-found", "Found "+results+" results");
 		return resultsNode;
     }
 
@@ -333,7 +333,7 @@ public class WebUI{
 					.addChild("td", xl.getString("Index"))
 						.addChild("input", new String[]{"name", "type", "value", "size"}, new String[]{"index", "text", indexuri, "40"});
 				searchTable.addChild("tr")
-					.addChild("td", xl.getString("ShowOldVersions"))
+					.addChild("td", xl.getString("Show old versions"))
 						.addChild("input", new String[]{"name", "type", showold?"checked":"size"}, new String[]{"showold", "checkbox", showold?"checked":"1"});
 		return searchDiv;
 	}
