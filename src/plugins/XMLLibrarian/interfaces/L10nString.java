@@ -1,7 +1,7 @@
 package plugins.XMLLibrarian.interfaces;
 
-import freenet.l10n.L10n;
-import freenet.l10n.L10n.LANGUAGE;
+import freenet.l10n.NodeL10n;
+import freenet.l10n.BaseL10n.LANGUAGE;
 
 
 public class L10nString{
@@ -10,7 +10,7 @@ public class L10nString{
 	static LANGUAGE lang;
 	
 	public static String getString(String key){
-		lang = L10n.getSelectedLanguage();
+		lang = NodeL10n.getBase().getSelectedLanguage();
 		if("Index".equals(key))
 			switch(lang){
 				case ENGLISH:

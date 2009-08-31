@@ -11,7 +11,7 @@ import freenet.pluginmanager.PluginHTTPException;
 import freenet.pluginmanager.PluginRespirator;
 import freenet.support.api.HTTPRequest;
 import freenet.pluginmanager.FredPluginL10n;
-import freenet.l10n.L10n.LANGUAGE;
+import freenet.l10n.BaseL10n.LANGUAGE;
 
 import plugins.XMLLibrarian.interfaces.WebUI;
 
@@ -19,7 +19,7 @@ import plugins.XMLLibrarian.interfaces.WebUI;
 
 public class XMLLibrarian implements FredPlugin, FredPluginHTTP, FredPluginVersioned, FredPluginRealVersioned, FredPluginThreadless, FredPluginL10n {
 	public static final String DEFAULT_INDEX_SITE = "bookmark:freenetindex";
-	private static int version = 24;
+	private static int version = 25;
 	private static final String plugName = "(XMLLibrarian " + version+")";
 	private PluginRespirator pr;
 	

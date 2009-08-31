@@ -5,7 +5,7 @@ import freenet.pluginmanager.PluginHTTPException;
 import freenet.support.HTMLNode;
 import freenet.support.api.HTTPRequest;
 import freenet.support.HTMLEncoder;
-import freenet.l10n.L10n;
+import freenet.l10n.NodeL10n;
 
 import freenet.support.Logger;
 import java.net.MalformedURLException;
@@ -128,7 +128,7 @@ public class WebUI{
 		
 		// Start of page
 		HTMLNode pageNode = new HTMLNode.HTMLDoctype("html", "-//W3C//DTD XHTML 1.1//EN");
-		HTMLNode htmlNode = pageNode.addChild("html", "xml:lang", L10n.getSelectedLanguage().isoCode);
+		HTMLNode htmlNode = pageNode.addChild("html", "xml:lang", NodeL10n.getBase().getSelectedLanguage().isoCode);
 			htmlNode.addChild(searchHead(plugName, search, refresh && !js));
 		
 		HTMLNode bodyNode = htmlNode.addChild("body");
