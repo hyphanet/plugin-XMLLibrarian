@@ -394,4 +394,9 @@ public class XMLIndex extends Index implements ClientGetCallback, RequestClient{
 			}
 		}
 	}
+
+	@Override
+	public boolean realTimeFlag() {
+		return true;
+	}
 }
