@@ -10,6 +10,7 @@ import com.db4o.ObjectContainer;
 import freenet.support.Logger;
 import freenet.support.api.Bucket;
 import freenet.support.io.FileBucket;
+import freenet.support.io.ResumeFailedException;
 import freenet.client.async.ClientGetCallback;
 import freenet.client.async.ClientGetter;
 import freenet.client.async.ClientContext;
@@ -111,26 +112,23 @@ public class XMLIndex extends Index implements ClientGetCallback, RequestClient{
 		/**
 		 * Hears an event.
 		 **/
-		public void receive(ClientEvent ce, ObjectContainer maybeContainer, ClientContext context){
+		public void receive(ClientEvent ce, ClientContext context){
 			String mainIndexDescription = ce.getDescription();
 			FindRequest.updateWithDescription(waitingOnMainIndex, mainIndexDescription);
 		}
 
-		public void onRemoveEventProducer(ObjectContainer container){
-			throw new UnsupportedOperationException();
-		}
 	};
 
 	/**
 	 * Callback for when index fetching completes
 	 */
 	/** Called on successful fetch */
-	public void onSuccess(FetchResult result, ClientGetter state, ObjectContainer container){
+	public void onSuccess(FetchResult result, ClientGetter state){
 		processRequests(result.asBucket());
 	}
 
 	/** Called on failed/canceled fetch */
-	public void onFailure(FetchException e, ClientGetter state, ObjectContainer container){
+	public void onFailure(FetchException e, ClientGetter state){
 		fetchStatus = FetchStatus.FAILED;
 	}
 
@@ -158,7 +156,7 @@ public class XMLIndex extends Index implements ClientGetCallback, RequestClient{
 		// try local file first
 		File file = new File(uri);
 		if (file.exists() && file.canRead()) {
-			processRequests(new FileBucket(file, true, false, false, false, false));
+			processRequests(new FileBucket(file, true, false, false, false));
 			return;
 		}
 
@@ -166,7 +164,7 @@ public class XMLIndex extends Index implements ClientGetCallback, RequestClient{
 		FreenetURI u = new FreenetURI(uri);
 		while (true) {
 			try {
-				hlsc.fetch(u, -1, this, this, hlsc.getFetchContext().clone());
+				hlsc.fetch(u, -1, this, hlsc.getFetchContext().clone());
 				break;
 			} catch (FetchException e) {
 				if (e.newURI != null) {
@@ -302,11 +300,8 @@ public class XMLIndex extends Index implements ClientGetCallback, RequestClient{
 			/**
 			 * Hears an event and updates those Requests waiting on this subindex fetch
 			 **/
-			public void receive(ClientEvent ce, ObjectContainer maybeContainer, ClientContext context){
+			public void receive(ClientEvent ce, ClientContext context){
 				FindRequest.updateWithDescription(waitingOnSubindex, ce.getDescription());
-			}
-			public void onRemoveEventProducer(ObjectContainer container){
-				throw new UnsupportedOperationException();
 			}
 		};
 		
@@ -398,4 +393,14 @@ public class XMLIndex extends Index implements ClientGetCallback, RequestClient{
 	public boolean realTimeFlag() {
 		return true;
 	}
+
+    @Override
+    public void onResume(ClientContext context) throws ResumeFailedException {
+        // Impossible.
+    }
+
+    @Override
+    public RequestClient getRequestClient() {
+        return this;
+    }
 }
